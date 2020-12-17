@@ -10,7 +10,7 @@ const Footer = () => {
 
     return (
         <BottomPanel>
-            <TextCopyRight>@Football team 2020</TextCopyRight>
+            <TextCopyRight>Football team 2020</TextCopyRight>
         </BottomPanel>
     );
 };

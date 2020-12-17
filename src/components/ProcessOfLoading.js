@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import LoadingElement from "./Downloading";
-import { CenterContainer, MessegeInfo } from "../styles/LoadPreviewStyles";
+import {CenterContainer, MessegeInfo} from "../styles/ProcessOfLoadingStyles";
 
-const LoadPrewiew = ({
+const ProcessOfLoading = ({
                          name = "error",
                      }) => {
     const [load, setLoad] = useState(false);
     useEffect(() => {
-        let myTimeout = setTimeout(() => {
+        let timeOfProcessing = setTimeout(() => {
             setLoad(true);
-        }, 5000);
+        }, 7000);
         console.log(load);
         return function cleanUp() {
-            clearTimeout(myTimeout);
+            clearTimeout(timeOfProcessing);
         };
     }, []);
     if (!load) {
-        return <LoadingElement />;
+        return <LoadingElement/>;
     }
     return (
         <CenterContainer>
@@ -25,4 +25,4 @@ const LoadPrewiew = ({
     );
 };
 
-export default LoadPrewiew;
+export default ProcessOfLoading;

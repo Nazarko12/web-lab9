@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
     ContainerCards,
     TitleStyles,
@@ -6,9 +6,14 @@ import {
     CatalogContainer,
 } from "../styles/HomeCatalogStyles";
 import ContainerItem from "./ContainerItem";
-import {data as source} from "./List";
+import ElementsContext from "./Context";
+
 
 const HomeCatalog = () => {
+    const { source } = useContext(ElementsContext);
+    useEffect(() => {
+        setData(source.slice(0, 2));
+    }, [source]);
     const [data, setData] = useState(source.slice(0, 2));
     const [isShowMore, setIsShowMore] = useState(false);
 
@@ -28,16 +33,17 @@ const HomeCatalog = () => {
         setIsShowMore(false);
     };
 
+
     return (
         <CatalogContainer>
-            <TitleStyles> Choose your player: </TitleStyles>
+            <TitleStyles>Choose a debutant from the list:</TitleStyles>
             <ContainerCards>
                 <ContainerItem products={data} currentView="card"/>
             </ContainerCards>
             {!isShowMore && (
-                <ButtonStyles onClick={() => showMore()}>More option</ButtonStyles>
+                <ButtonStyles onClick={() => showMore()}>View More</ButtonStyles>
             )}
-            {isShowMore && <ButtonStyles onClick={showLess}>More option</ButtonStyles>}
+            {isShowMore && <ButtonStyles onClick={showLess}>Collapse</ButtonStyles>}
         </CatalogContainer>
     );
 };

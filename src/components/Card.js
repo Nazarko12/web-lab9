@@ -17,11 +17,11 @@ const Card = ({player}) => {
         <div>
             <CardStyles
                 hoverable
-                cover={<CardImage alt="Player" src={player.image}/>}
+                cover={<CardImage alt="Player" src={player.imageOfPlayer}/>}
             >
                 <Footer>
                     <MetaStyles title={player.name}/>
-                    <TextStyles>Price: {player.price_in_mln_euro} euro</TextStyles>
+                    <TextStyles>Price: {player.price} euro</TextStyles>
                     <AllInfo player={player}/>
                 </Footer>
             </CardStyles>
@@ -53,7 +53,7 @@ const AllInfo = ({player}) => {
                         setVisible(false);
                     }}
                 >
-                    View Less
+                    Hidden
                 </ButtonLessStyles>
             </MoreInfo>
         </div>

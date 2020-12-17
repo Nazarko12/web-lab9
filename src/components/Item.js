@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
     BottomPart,
     ItemInfo,
@@ -10,10 +10,12 @@ import {
     DescriptionStyles,
 
 } from "../styles/ItemStyles";
-import {data} from "./List";
-import {useLocation, Redirect} from "react-router-dom";
-import {Image} from "antd";
+import { useLocation, Redirect } from "react-router-dom";
+import { Image } from "antd";
 import description from "./UtilsInfo";
+import { fetchDataById, patchData } from "../CRUD";
+import ProcessOfLoading from "./ProcessOfLoading";
+
 
 const Item = () => {
     const [item, setItem] = useState({});
@@ -25,31 +27,49 @@ const Item = () => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+
         const id = parseInt(location.search.split("=")[1]);
-        const foundItem = data.find((element) => element.id === id);
-        setItem(foundItem);
-        totalPrice.current = foundItem.price_in_mln_euro;
+        fetchDataById(id)
+            .then(([foundItem]) => {
+                setItem(foundItem);
+                patchData(foundItem);
+            })
+            .catch(() => {
+                console.log("Elements failed");
+            });
     }, []);
 
+    useEffect(() => {
+        if (item === undefined) {
+            return;
+        }
+        totalPrice.current = item.price;
+    }, [item]);
+
+
+    if (Object.keys(item).length === 0) {
+        return <ProcessOfLoading />;
+    }
 
     return (
         <StyledItem>
             <TopPart>
-                <Image src={item.image}/>
+                <Image src={item.imageOfPlayer} />
                 <ItemInfo>
                     <NameStyles>{item.name}</NameStyles>
+
                     <DescriptionStyles>{description(item)}</DescriptionStyles>
 
                 </ItemInfo>
             </TopPart>
             <BottomPart>
-                <StyledPrice>Price: {totalPrice.current} euro</StyledPrice>
+                <StyledPrice>Price: {item.price}  euro</StyledPrice>
                 <ButtonItemStyles
                     onClick={() => setRedirect(true)}
                 >
                     Return
                 </ButtonItemStyles>
-                {redirect && <Redirect push to="/catalog"/>}
+                {redirect && <Redirect push to="/catalog" />}
                 <ButtonItemStyles>
                     Add
                 </ButtonItemStyles>

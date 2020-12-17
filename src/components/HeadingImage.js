@@ -8,7 +8,7 @@ import photo3 from "../image/coach.jpg";
 class Clock extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {image_number: 1};
+        this.state = { image_number: 1 };
     }
 
     componentDidMount() {
@@ -20,7 +20,7 @@ class Clock extends React.Component {
     }
 
     tick() {
-        this.setState({image_number: ((this.state.image_number + 1) % 3) + 1});
+        this.setState({ image_number: ((this.state.image_number + 1) % 3) + 1 });
     }
 
     render() {
@@ -37,7 +37,7 @@ class Clock extends React.Component {
                 photo = photo3;
                 break;
         }
-        return <ImageStyles src={photo}/>;
+        return <ImageStyles src={photo} />;
     }
 }
 

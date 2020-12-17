@@ -1,34 +1,20 @@
-import React, {useState, useEffect} from "react";
-import {data as sourceData} from "../components/List";
-import ContainerItem from "../components/ContainerItem";
-import {executeFilters} from "../components/CatalogForSorting";
+import React, {useState, useEffect, useContext} from "react";
 import {Menu} from "antd";
-import {
-    ViewComponent,
-    AutoCompleteStyles,
-    MenuStyles,
-    MenuItemStyles,
-} from "../styles/CatalogStyles";
+
+import ElementsContext from "../components/Context";
+import {CatalogState} from "../components/Source";
+import {changeCatalogState, executeFilters, findBy} from "../components/Utils";
+import ProcessOfLoading from "../components/ProcessOfLoading";
+import ContainerItem from "../components/ContainerItem";
+import {AutoCompleteStyles, MenuItemStyles, MenuStyles, ViewComponent} from "../styles/CatalogStyles";
 
 
-let data = sourceData;
 const {SubMenu} = Menu;
 
-const options = [
-    {value: "Football"},
-
-];
-
-const CatalogState = {
-    currentView: "card",
-    sortType: "default",
-    filterPrice: "default",
-    filterMaterial: "default",
-    filterDoor: "default",
-    filterSize: "default",
-};
 
 const Catalog = () => {
+    const {source} = useContext(ElementsContext);
+    let data = source;
     const [selectedKeys, setSelectedKeys] = useState(Object.values(CatalogState));
     const [products, setProducts] = useState([...data]);
 
@@ -36,55 +22,34 @@ const Catalog = () => {
         window.scrollTo(0, 0);
     }, []);
 
-    const handleInput = (sample) => {
-        sample = sample.toLowerCase();
-        let resultList = [];
-        sourceData.forEach((item) => {
-            switch (true) {
+    useEffect(() => {
+        setProducts(source);
+    }, [source]);
 
-                case item.name.toLowerCase().includes(sample):
-                    resultList.push(item);
-                    break;
-            }
-        });
-        data = resultList;
-        if (sample === "") {
-            data = sourceData;
-        }
+    const handleInput = (sample) => {
+        data = findBy(sample, source);
         setProducts(executeFilters(CatalogState, data));
     };
 
     const handleClick = (e) => {
         console.log(e);
-        switch (e.item.props.subMenuKey) {
-            case "sort-menu-":
-                CatalogState.sortType = e.key;
-                break;
-            case "filterPrice-menu-":
-                CatalogState.filterPrice = e.key;
-                break;
-
-        }
+        let CatalogState = changeCatalogState(e);
         setSelectedKeys(Object.values(CatalogState));
         setProducts(executeFilters(CatalogState, data));
     };
 
     const resetDefault = (e) => {
-        let props = {};
+        let props = {
+            key: "default",
+            item: {props: {subMenuKey: e.item.props.subMenuKey}},
+        };
         if (e.item.props.subMenuKey === "view-menu-") {
-            props = {
-                key: "card",
-                item: {props: {subMenuKey: e.item.props.subMenuKey}},
-            };
-        } else {
-            props = {
-                key: "default",
-                item: {props: {subMenuKey: e.item.props.subMenuKey}},
-            };
+            props.key = "card";
         }
         handleClick(props);
     };
 
+    console.log(products);
     return (
         <ViewComponent>
             <MenuStyles
@@ -94,18 +59,17 @@ const Catalog = () => {
                 selectedKeys={selectedKeys}
                 mode="horizontal"
             >
-
                 <SubMenu
                     key="sort"
                     title="Sort by"
                 >
-                    <Menu.Item key="highPrice">Highest Price</Menu.Item>
+                    <Menu.Item key="highPrice">The highest price</Menu.Item>
+
                 </SubMenu>
 
                 <MenuItemStyles key="search">
                     <AutoCompleteStyles
                         style={{width: 200}}
-                        options={options}
                         placeholder="Search"
                         filterOption={(inputValue, option) =>
                             option.value.toUpperCase().indexOf(inputValue.toUpperCase()) !==
@@ -115,7 +79,11 @@ const Catalog = () => {
                     />
                 </MenuItemStyles>
             </MenuStyles>
-            <ContainerItem products={products} currentView={CatalogState.currentView}/>
+            {products.length !== 0 ? (
+                <ContainerItem products={products} currentView={CatalogState.currentView}/>
+            ) : (
+                <ProcessOfLoading/>
+            )}
         </ViewComponent>
     );
 };

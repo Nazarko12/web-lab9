@@ -6,9 +6,8 @@ import HomeCatalog from "../components/HomeCatalog";
 const Home = () => {
     return (
         <div>
-
-            <Heading/>
-            <HomeCatalog/>
+            <Heading />
+            <HomeCatalog />
         </div>
     );
 };

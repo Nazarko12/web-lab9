@@ -18,8 +18,8 @@ export const ContainerCards = styled.section`
 
 export const TitleStyles = styled.h1`
   font-family: "OpenSans-Light";
-  font-size: 25px;
-  letter-spacing: 13px;
+  font-size: 17px;
+  letter-spacing: 7px;
   text-transform: uppercase;
   padding-top: 75px;
   padding-bottom: 50px;

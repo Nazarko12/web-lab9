@@ -2,11 +2,11 @@ import { CatalogState } from "./Source";
 
 let data = [];
 
-const comparator = (a, b, standard) => {
-    switch (standard) {
+const comparator = (a, b, numbers) => {
+    switch (numbers) {
         case "highPrice":
-            if (a.price_in_mln_euro > b.price_in_mln_euro) return -1;
-            else if (a.price_in_mln_euro < b.price_in_mln_euro) return 1;
+            if (a.price > b.price) return -1;
+            else if (a.price < b.price) return 1;
             else return 0;
     }
 };
